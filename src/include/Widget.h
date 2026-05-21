@@ -6,6 +6,13 @@
 
 namespace IrisGUI {
 
+struct WidgetSpacing {
+    int left = 0;
+    int top = 0;
+    int right = 0;
+    int bottom = 0;
+};
+
 struct WidgetStyle {
     COLORREF bgColor   = RGB(240, 240, 240);
     COLORREF borderColor = RGB(200, 200, 200);
@@ -13,6 +20,8 @@ struct WidgetStyle {
     COLORREF textColor = RGB(0, 0, 0);
     int fontSize       = 16;
     int borderRadius   = 0;
+    WidgetSpacing margin;
+    WidgetSpacing padding;
 };
 
 class Widget {

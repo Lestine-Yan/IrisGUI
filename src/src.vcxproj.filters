@@ -24,11 +24,17 @@
     <ClInclude Include="include\iris.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Label.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\Widget.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Label.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
