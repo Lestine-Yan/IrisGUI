@@ -5,3 +5,5 @@ src/src.vcxproj.user
 src/x64/Debug/*
 src/x64/Release/*
 src/src/x64/*
+src/iris/x64/Debug/*
+text/*
