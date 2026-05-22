@@ -8,3 +8,4 @@ src/src/x64/*
 src/iris/x64/Debug/*
 text/*
 doc/plan.md
+.vs

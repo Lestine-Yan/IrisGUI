@@ -9,7 +9,8 @@
 
 #### 核心函数
 
-* `Label(int x, int y, int w, int h, const std::wstring& text)` – 创建文本标签，并初始化位置、大小和文本内容
+* `Label(const std::wstring& text, int w, int h)` – 创建文本标签，并初始化大小和文本内容，位置由父控件布局自动管理
+* `Label(int x, int y, int w, int h, const std::wstring& text)` – 兼容旧的手动定位写法，挂载到父控件后坐标会由布局覆盖
 * `draw()` – 绘制标签背景、边框和文本内容
 * `setText(const std::wstring& text)` – 设置标签显示的文本
 * `text()` – 获取当前标签文本
@@ -33,6 +34,6 @@
 ### Label 文本标签类在库中的意义
 
 * 提供基础文本显示能力：Label 是最简单的可视化控件之一，用于显示说明文字、标题、状态文本等内容。
-* 复用 Widget 体系：Label 继承自 `Widget`，可以参与控件树管理，并通过根控件的 `drawAll()` 统一绘制。
+* 复用 Widget 体系：Label 继承自 `Widget`，可以参与控件树管理，挂载后由父控件自动布局，并通过根控件的 `drawAll()` 统一绘制。
 * 验证样式能力：Label 使用文字颜色、字体大小、内边距、边框和圆角等样式属性，是 `WidgetStyle` 在具体控件中的基础应用示例。
 * 便于扩展：后续可以在 Label 基础上继续增加文本对齐、自动换行、省略号截断等文本显示能力。

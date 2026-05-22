@@ -3,8 +3,11 @@
 
 namespace IrisGUI {
 
+Root::Root(const std::wstring& title)
+    : Widget(0, 0), m_title(title) {}
+
 Root::Root(int w, int h, const std::wstring& title)
-    : Widget(0, 0, w, h), m_title(title) {}
+    : Widget(0, 0, w, h), m_title(title), m_hasWindowSize(true) {}
 
 void Root::draw()
 {
@@ -27,7 +30,15 @@ void Root::end()
 
     m_ended = true;
 
-    initgraph(m_width, m_height);
+    const int windowWidth = m_hasWindowSize ? m_width : ax();
+    const int windowHeight = m_hasWindowSize ? m_height : ay();
+
+    if (!m_hasWindowSize) {
+        m_width = windowWidth;
+        m_height = windowHeight;
+    }
+
+    initgraph(windowWidth, windowHeight);
 
     SetWindowTextW(GetHWnd(), m_title.c_str());
 

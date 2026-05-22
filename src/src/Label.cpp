@@ -3,6 +3,9 @@
 
 namespace IrisGUI {
 
+Label::Label(const std::wstring& text, int w, int h)
+    : Widget(w, h), m_text(text) {}
+
 Label::Label(int x, int y, int w, int h, const std::wstring& text)
     : Widget(x, y, w, h), m_text(text) {}
 

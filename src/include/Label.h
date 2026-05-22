@@ -7,7 +7,8 @@ namespace IrisGUI {
 
 class Label : public Widget {
 public:
-    Label(int x = 0, int y = 0, int w = 100, int h = 30, const std::wstring& text = L"");
+    Label(const std::wstring& text = L"", int w = 100, int h = 30);
+    Label(int x, int y, int w, int h, const std::wstring& text);
 
     void draw() override;
 

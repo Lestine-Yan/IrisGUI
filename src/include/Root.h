@@ -7,7 +7,8 @@ namespace IrisGUI {
 
 class Root : public Widget {
 public:
-    Root(int w = 640, int h = 480, const std::wstring& title = L"IrisGUI");
+    Root(const std::wstring& title = L"IrisGUI");
+    Root(int w, int h, const std::wstring& title = L"IrisGUI");
 
     void draw() override;
 
@@ -19,6 +20,7 @@ public:
 private:
     std::wstring m_title;
     bool m_ended = false;
+    bool m_hasWindowSize = false;
 };
 
 } // namespace IrisGUI
