@@ -26,7 +26,8 @@ struct WidgetStyle {
 
 class Widget {
 public:
-    Widget(int x = 0, int y = 0, int w = 100, int h = 30);
+    Widget(int w = 100, int h = 30);
+    Widget(int x, int y, int w, int h);
     virtual ~Widget();
 
     Widget(const Widget&) = delete;
@@ -41,6 +42,8 @@ public:
     int y()      const { return m_y; }
     int width()  const { return m_width; }
     int height() const { return m_height; }
+    int ax() const;
+    int ay() const;
 
     int absX() const;
     int absY() const;
@@ -54,6 +57,8 @@ public:
     // ── Style ────────────────────────────────────────────────────
     void setStyle(const WidgetStyle& s) { m_style = s; }
     const WidgetStyle& style() const    { return m_style; }
+    void setFlex(bool flex) { m_flex = flex; }
+    bool flex() const { return m_flex; }
 
     // ── Widget tree (composite pattern) ──────────────────────────
     void addChild(Widget* child);
@@ -84,6 +89,7 @@ protected:
     int  m_x = 0, m_y = 0;
     int  m_width = 100, m_height = 30;
     bool m_visible = true;
+    bool m_flex = false;
     Widget*              m_parent = nullptr;
     std::vector<Widget*> m_children;
     WidgetStyle          m_style;

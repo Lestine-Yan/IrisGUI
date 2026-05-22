@@ -4,19 +4,20 @@
 #### 公有属性与生命周期
 
 * 继承自 `Widget`，作为应用中所有控件的根节点
-* 根控件位置固定从窗口左上角 `(0, 0)` 开始，大小对应 EasyX 窗口大小
+* 根控件位置固定从窗口左上角 `(0, 0)` 开始；未显式指定窗口大小时，窗口大小默认为 Root 的 `ax()` 和 `ay()`
 * 使用 `WidgetStyle` 控制根区域背景颜色
 * 通过 `end()` 标记声明阶段结束，并开始渲染与事件循环
 
 #### 控件挂载
 
-* `mount(Widget*)` – 将控件挂载到 Root 子树下，并返回 Root 自身以支持链式声明
+* `mount(Widget*)` – 将控件挂载到 Root 子树下，并触发 `Widget::addChild()` 的自动布局，返回 Root 自身以支持链式声明
 * `end()` 调用后不再接受新的控件挂载，确保控件树在声明阶段只处理一次
 * 挂载到 Root 下的控件会随控件树析构而释放，通常应使用 `new` 创建后交给 Root 管理
 
 #### 核心函数
 
-* `Root(int w, int h, const std::wstring& title)` – 创建根控件，并指定窗口大小和标题
+* `Root(const std::wstring& title)` – 创建根控件，窗口大小在 `end()` 时使用 Root 的 `ax()` 和 `ay()` 自动确定
+* `Root(int w, int h, const std::wstring& title)` – 创建根控件，并显式指定窗口大小和标题
 * `draw()` – 绘制根背景
 * `mount(Widget* child)` – 声明并挂载一个子控件
 * `end()` – 结束声明阶段，初始化 EasyX 窗口并进入主循环

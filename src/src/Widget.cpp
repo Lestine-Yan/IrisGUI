@@ -1,7 +1,17 @@
 #include "pch.h"
 #include "../include/Widget.h"
 
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
+
 namespace IrisGUI {
+
+Widget::Widget(int w, int h)
+    : m_width(w), m_height(h) {}
 
 Widget::Widget(int x, int y, int w, int h)
     : m_x(x), m_y(y), m_width(w), m_height(h) {}
@@ -24,6 +34,22 @@ void Widget::setGeometry(int x, int y, int w, int h)
 {
     m_x = x; m_y = y;
     m_width = w; m_height = h;
+}
+
+int Widget::ax() const
+{
+    return m_x + m_width
+        + m_style.padding.left + m_style.padding.right
+        + m_style.margin.left + m_style.margin.right
+        + m_style.borderWidth * 2;
+}
+
+int Widget::ay() const
+{
+    return m_y + m_height
+        + m_style.padding.top + m_style.padding.bottom
+        + m_style.margin.top + m_style.margin.bottom
+        + m_style.borderWidth * 2;
 }
 
 int Widget::absX() const
@@ -55,8 +81,35 @@ void Widget::addChild(Widget* child)
     if (!child) return;
     if (child->m_parent)
         child->m_parent->removeChild(child);
+
+    if (m_flex) {
+        int nextX = m_style.padding.left + m_style.borderWidth;
+        for (auto* existing : m_children)
+            nextX = std::max(nextX, existing->ax());
+        child->m_x = nextX;
+        child->m_y = m_style.padding.top + m_style.borderWidth;
+    }
+    else {
+        int nextY = m_style.padding.top + m_style.borderWidth;
+        for (auto* existing : m_children)
+            nextY = std::max(nextY, existing->ay());
+        child->m_x = m_style.padding.left + m_style.borderWidth;
+        child->m_y = nextY;
+    }
+
     child->m_parent = this;
     m_children.push_back(child);
+
+    Widget* current = child;
+    for (Widget* parent = this; parent; parent = parent->m_parent) {
+        parent->m_width = std::max(
+            parent->m_width,
+            current->ax() + parent->m_style.padding.right + parent->m_style.borderWidth);
+        parent->m_height = std::max(
+            parent->m_height,
+            current->ay() + parent->m_style.padding.bottom + parent->m_style.borderWidth);
+        current = parent;
+    }
 }
 
 void Widget::removeChild(Widget* child)
