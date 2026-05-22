@@ -75,10 +75,10 @@ public:
     virtual void onMouseMove(const ExMessage& msg) {}
     virtual void update() {}
 
-    // ── Static dispatch helpers ──────────────────────────────────
-    static void drawAll(Widget* root);
-    static void updateAll(Widget* root);
-    static void dispatchEvent(Widget* root, const ExMessage& msg);
+    // ── Dispatch helpers ─────────────────────────────────────────
+    void drawAll();
+    void updateAll();
+    void dispatchEvent(const ExMessage& msg);
 
 protected:
     int  m_x = 0, m_y = 0;
