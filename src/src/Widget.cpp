@@ -109,29 +109,27 @@ void Widget::handleEvent(const ExMessage& msg)
     }
 }
 
-// ── Static dispatch ──────────────────────────────────────────────────
+// ── Dispatch ─────────────────────────────────────────────────────────
 
-void Widget::drawAll(Widget* root)
+void Widget::drawAll()
 {
-    if (!root || !root->m_visible) return;
-    root->draw();
-    for (auto* child : root->m_children)
-        drawAll(child);
+    if (!m_visible) return;
+    draw();
+    for (auto* child : m_children)
+        child->drawAll();
 }
 
-void Widget::updateAll(Widget* root)
+void Widget::updateAll()
 {
-    if (!root) return;
-    root->update();
-    for (auto* child : root->m_children)
-        updateAll(child);
+    update();
+    for (auto* child : m_children)
+        child->updateAll();
 }
 
-void Widget::dispatchEvent(Widget* root, const ExMessage& msg)
+void Widget::dispatchEvent(const ExMessage& msg)
 {
-    if (!root || !root->m_visible) return;
+    if (!m_visible) return;
 
-    // Mouse events: dispatch to the topmost child that contains the point
     bool isMouseEvent = (msg.message == WM_LBUTTONDOWN ||
                          msg.message == WM_LBUTTONUP   ||
                          msg.message == WM_RBUTTONDOWN ||
@@ -142,16 +140,16 @@ void Widget::dispatchEvent(Widget* root, const ExMessage& msg)
                          msg.message == WM_MOUSEWHEEL);
 
     if (isMouseEvent) {
-        for (auto it = root->m_children.rbegin();
-             it != root->m_children.rend(); ++it) {
+        for (auto it = m_children.rbegin();
+             it != m_children.rend(); ++it) {
             if ((*it)->containsPoint(msg.x, msg.y)) {
-                dispatchEvent(*it, msg);
+                (*it)->dispatchEvent(msg);
                 return;
             }
         }
     }
 
-    root->handleEvent(msg);
+    handleEvent(msg);
 }
 
 } // namespace IrisGUI

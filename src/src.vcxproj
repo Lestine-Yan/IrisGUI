@@ -147,11 +147,13 @@
     <ClInclude Include="src\framework.h" />
     <ClInclude Include="include\iris.h" />
     <ClInclude Include="include\Label.h" />
+    <ClInclude Include="include\Root.h" />
     <ClInclude Include="include\Widget.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Label.cpp" />
+    <ClCompile Include="src\Root.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
