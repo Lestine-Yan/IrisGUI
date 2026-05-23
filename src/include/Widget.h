@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <cstddef>
 #include <graphics.h>
 
 namespace IrisGUI {
@@ -67,6 +68,8 @@ public:
 
     Widget*       parent()             { return m_parent; }
     const Widget* parent()       const { return m_parent; }
+    Widget& operator[](std::size_t index) { return *m_children.at(index); }
+    const Widget& operator[](std::size_t index) const { return *m_children.at(index); }
     const std::vector<Widget*>& children() const { return m_children; }
 
     // ── Hit testing ──────────────────────────────────────────────
