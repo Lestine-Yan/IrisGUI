@@ -146,12 +146,14 @@
   <ItemGroup>
     <ClInclude Include="src\framework.h" />
     <ClInclude Include="include\iris.h" />
+    <ClInclude Include="include\Div.h" />
     <ClInclude Include="include\Label.h" />
     <ClInclude Include="include\Root.h" />
     <ClInclude Include="include\Widget.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Div.cpp" />
     <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\Root.cpp" />
     <ClCompile Include="src\pch.cpp">

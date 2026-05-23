@@ -1,0 +1,231 @@
+#include "pch.h"
+#include "../include/Div.h"
+
+#include <algorithm>
+#include <array>
+#include <cctype>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+
+namespace {
+
+std::string trim(const std::string& value)
+{
+    std::size_t begin = 0;
+    while (begin < value.size() && std::isspace(static_cast<unsigned char>(value[begin])))
+        ++begin;
+
+    std::size_t end = value.size();
+    while (end > begin && std::isspace(static_cast<unsigned char>(value[end - 1])))
+        --end;
+
+    return value.substr(begin, end - begin);
+}
+
+std::string toLower(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(),
+        [](unsigned char ch) { return static_cast<char>(std::tolower(ch)); });
+    return value;
+}
+
+bool parseNonNegativeInt(const std::string& value, int& result)
+{
+    if (value.empty()) return false;
+
+    std::size_t pos = 0;
+    try {
+        int parsed = std::stoi(value, &pos);
+        if (pos != value.size() || parsed < 0)
+            return false;
+        result = parsed;
+        return true;
+    }
+    catch (...) {
+        return false;
+    }
+}
+
+bool parseNamedColor(const std::string& value, COLORREF& color)
+{
+    static const std::unordered_map<std::string, COLORREF> colors{
+        { "black", RGB(0, 0, 0) },
+        { "white", RGB(255, 255, 255) },
+        { "red", RGB(255, 0, 0) },
+        { "green", RGB(0, 255, 0) },
+        { "blue", RGB(0, 0, 255) },
+    };
+
+    auto it = colors.find(toLower(value));
+    if (it == colors.end())
+        return false;
+
+    color = it->second;
+    return true;
+}
+
+bool parseRgbColor(const std::string& value, COLORREF& color)
+{
+    if (value.size() < 7 || value.front() != '[' || value.back() != ']')
+        return false;
+
+    std::array<int, 3> rgb{};
+    std::stringstream stream(value.substr(1, value.size() - 2));
+    std::string part;
+    int index = 0;
+
+    while (std::getline(stream, part, ',')) {
+        if (index >= 3)
+            return false;
+
+        int component = 0;
+        if (!parseNonNegativeInt(trim(part), component) || component > 255)
+            return false;
+
+        rgb[index++] = component;
+    }
+
+    if (index != 3)
+        return false;
+
+    color = RGB(rgb[0], rgb[1], rgb[2]);
+    return true;
+}
+
+} // namespace
+
+namespace IrisGUI {
+
+Div::Div(int w, int h)
+    : Widget(w, h) {}
+
+Div::Div(int x, int y, int w, int h)
+    : Widget(x, y, w, h) {}
+
+Div::Div(const std::string& className, int w, int h)
+    : Widget(w, h)
+{
+    applyClassName(className);
+}
+
+Div::Div(int x, int y, int w, int h, const std::string& className)
+    : Widget(x, y, w, h)
+{
+    applyClassName(className);
+}
+
+void Div::draw()
+{
+    if (!m_visible) return;
+
+    const int left = absX();
+    const int top = absY();
+    const int right = left + m_width;
+    const int bottom = top + m_height;
+
+    setfillcolor(m_style.bgColor);
+    if (m_style.borderRadius > 0)
+        solidroundrect(left, top, right, bottom, m_style.borderRadius * 2, m_style.borderRadius * 2);
+    else
+        solidrectangle(left, top, right, bottom);
+
+    if (m_style.borderWidth > 0) {
+        setlinecolor(m_style.borderColor);
+        setlinestyle(PS_SOLID, m_style.borderWidth);
+        if (m_style.borderRadius > 0)
+            roundrect(left, top, right, bottom, m_style.borderRadius * 2, m_style.borderRadius * 2);
+        else
+            rectangle(left, top, right, bottom);
+    }
+}
+
+void Div::setClassName(const std::string& className)
+{
+    applyClassName(className);
+}
+
+const std::string& Div::className() const
+{
+    return m_className;
+}
+
+void Div::applyClassName(const std::string& className)
+{
+    m_className = className;
+
+    WidgetStyle parsedStyle = style();
+    int parsedWidth = width();
+    int parsedHeight = height();
+
+    setFlex(false);
+
+    std::istringstream stream(className);
+    std::string token;
+    while (stream >> token) {
+        if (token == "flex") {
+            setFlex(true);
+            continue;
+        }
+
+        if (token.starts_with("font-")) {
+            int value = 0;
+            if (parseNonNegativeInt(token.substr(5), value))
+                parsedStyle.fontSize = value;
+            continue;
+        }
+
+        if (token.starts_with("w-")) {
+            int value = 0;
+            if (parseNonNegativeInt(token.substr(2), value))
+                parsedWidth = value;
+            continue;
+        }
+
+        if (token.starts_with("h-")) {
+            int value = 0;
+            if (parseNonNegativeInt(token.substr(2), value))
+                parsedHeight = value;
+            continue;
+        }
+
+        if (token.starts_with("ml-")) {
+            int value = 0;
+            if (parseNonNegativeInt(token.substr(3), value))
+                parsedStyle.margin.left = value;
+            continue;
+        }
+
+        if (token.starts_with("my-")) {
+            int value = 0;
+            if (parseNonNegativeInt(token.substr(3), value)) {
+                parsedStyle.margin.top = value;
+                parsedStyle.margin.bottom = value;
+            }
+            continue;
+        }
+
+        if (token.starts_with("p-")) {
+            int value = 0;
+            if (parseNonNegativeInt(token.substr(2), value)) {
+                parsedStyle.padding.left = value;
+                parsedStyle.padding.top = value;
+                parsedStyle.padding.right = value;
+                parsedStyle.padding.bottom = value;
+            }
+            continue;
+        }
+
+        if (token.starts_with("bg-")) {
+            const std::string value = token.substr(3);
+            COLORREF color = parsedStyle.bgColor;
+            if (parseNamedColor(value, color) || parseRgbColor(value, color))
+                parsedStyle.bgColor = color;
+        }
+    }
+
+    setSize(parsedWidth, parsedHeight);
+    setStyle(parsedStyle);
+}
+
+} // namespace IrisGUI
