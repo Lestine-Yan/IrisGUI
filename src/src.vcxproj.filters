@@ -24,6 +24,9 @@
     <ClInclude Include="include\iris.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Div.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\Label.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -35,6 +38,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Div.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\Label.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
