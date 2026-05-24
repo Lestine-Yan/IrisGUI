@@ -83,17 +83,17 @@ void Widget::addChild(Widget* child)
         child->m_parent->removeChild(child);
 
     if (m_flex) {
-        int nextX = m_style.padding.left + m_style.borderWidth;
+        int nextX = m_style.margin.left + m_style.padding.left + m_style.borderWidth;
         for (auto* existing : m_children)
             nextX = std::max(nextX, existing->ax());
         child->m_x = nextX;
-        child->m_y = m_style.padding.top + m_style.borderWidth;
+        child->m_y = m_style.margin.top + m_style.padding.top + m_style.borderWidth;
     }
     else {
-        int nextY = m_style.padding.top + m_style.borderWidth;
+        int nextY = m_style.margin.top + m_style.padding.top + m_style.borderWidth;
         for (auto* existing : m_children)
             nextY = std::max(nextY, existing->ay());
-        child->m_x = m_style.padding.left + m_style.borderWidth;
+        child->m_x = m_style.margin.left + m_style.padding.left + m_style.borderWidth;
         child->m_y = nextY;
     }
 
