@@ -119,8 +119,8 @@ void Div::draw()
 {
     if (!m_visible) return;
 
-    const int left = absX();
-    const int top = absY();
+    const int left = absX() + m_style.margin.left;
+    const int top = absY() + m_style.margin.top;
     const int right = left + m_width;
     const int bottom = top + m_height;
 
