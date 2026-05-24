@@ -17,7 +17,7 @@ struct WidgetSpacing {
 struct WidgetStyle {
     COLORREF bgColor   = RGB(240, 240, 240);
     COLORREF borderColor = RGB(200, 200, 200);
-    int borderWidth    = 1;
+    int borderWidth    = 0;
     COLORREF textColor = RGB(0, 0, 0);
     int fontSize       = 16;
     int borderRadius   = 0;
