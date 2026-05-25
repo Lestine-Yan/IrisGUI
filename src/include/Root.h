@@ -5,6 +5,8 @@
 
 namespace IrisGUI {
 
+class App;
+
 class Root : public Widget {
 public:
     Root(const std::wstring& title = L"IrisGUI");
@@ -13,6 +15,9 @@ public:
     void draw() override;
 
     Root& mount(Widget* child);
+    App& app(std::size_t index);
+    const App& app(std::size_t index) const;
+    std::size_t appCount() const;
     void end();
 
     bool isEnded() const { return m_ended; }

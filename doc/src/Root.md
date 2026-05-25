@@ -12,6 +12,8 @@
 #### 控件挂载
 
 * `mount(Widget*)` – 将控件挂载到 Root 子树下，不触发 `Widget::addChild()` 的自动布局，返回 Root 自身以支持链式声明
+* `app(std::size_t index)` – 按 Root 直接子控件下标获取 `App` 引用，便于调用 `root.app(0).layout(new Layout())`
+* `appCount()` – 获取当前挂载在 Root 下的 `App` 数量
 * 第一个挂载到同一个 Root 下的 `App` 默认显示，后续挂载的 `App` 默认隐藏
 * `end()` 调用后不再接受新的控件挂载，确保控件树在声明阶段只处理一次
 * 挂载到 Root 下的控件会随控件树析构而释放，通常应使用 `new` 创建后交给 Root 管理
@@ -22,6 +24,8 @@
 * `Root(int w, int h, const std::wstring& title)` – 创建根控件，并显式指定窗口大小和标题
 * `draw()` – 绘制根背景
 * `mount(Widget* child)` – 声明并挂载一个子控件
+* `app(std::size_t index)` – 获取指定下标的 App；`root[0]` 的静态类型是 `Widget&`，需要使用 `root.app(0)` 才能直接访问 App 专属接口
+* `appCount()` – 获取 Root 下的 App 数量
 * `end()` – 结束声明阶段，初始化 EasyX 窗口并进入主循环
 * `isEnded()` – 判断声明阶段是否已经结束
 
@@ -32,6 +36,7 @@
 * 事件分发复用 `Widget::dispatchEvent(msg)`，从根节点向命中的子控件传递
 * 状态更新复用 `Widget::updateAll()`，从根节点向下遍历所有子控件
 * 绘制复用 `Widget::drawAll()`，先绘制 Root 背景，再递归绘制所有子控件
+* 普通控件绘制完成后，`Root::end()` 会最后绘制可见 App 上独立挂载的 `Layout`
 
 ### Root 根控件类在库中的意义
 

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "../include/Root.h"
 #include "../include/App.h"
+#include "../include/Layout.h"
+#include <typeinfo>
 
 namespace IrisGUI {
 
@@ -39,6 +41,26 @@ Root& Root::mount(Widget* child)
     return *this;
 }
 
+App& Root::app(std::size_t index)
+{
+    return dynamic_cast<App&>(*m_children.at(index));
+}
+
+const App& Root::app(std::size_t index) const
+{
+    return dynamic_cast<const App&>(*m_children.at(index));
+}
+
+std::size_t Root::appCount() const
+{
+    std::size_t count = 0;
+    for (auto* child : m_children) {
+        if (dynamic_cast<App*>(child))
+            ++count;
+    }
+    return count;
+}
+
 void Root::end()
 {
     if (m_ended) return;
@@ -54,8 +76,11 @@ void Root::end()
     }
 
     for (auto* child : m_children) {
-        if (auto* app = dynamic_cast<App*>(child))
+        if (auto* app = dynamic_cast<App*>(child)) {
             app->setGeometry(0, 0, windowWidth, windowHeight);
+            if (auto* layout = app->layout())
+                layout->setGeometry(0, 0, windowWidth, windowHeight);
+        }
     }
 
     initgraph(windowWidth, windowHeight);
@@ -79,6 +104,14 @@ void Root::end()
         setbkcolor(m_style.bgColor);
         cleardevice();
         drawAll();
+        for (auto* child : m_children) {
+            if (auto* app = dynamic_cast<App*>(child)) {
+                if (app->isVisible()) {
+                    if (auto* layout = app->layout())
+                        layout->drawAll();
+                }
+            }
+        }
         FlushBatchDraw();
         Sleep(16);
     }
