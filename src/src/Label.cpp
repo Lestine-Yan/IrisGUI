@@ -4,34 +4,27 @@
 namespace IrisGUI {
 
 Label::Label(const std::wstring& text, int w, int h)
-    : Widget(w, h), m_text(text) {}
+    : Div(w, h), m_text(text) {}
+
+Label::Label(const std::string& className, const std::wstring& text, int w, int h)
+    : Div(className, w, h), m_text(text) {}
 
 Label::Label(int x, int y, int w, int h, const std::wstring& text)
-    : Widget(x, y, w, h), m_text(text) {}
+    : Div(x, y, w, h), m_text(text) {}
+
+Label::Label(int x, int y, int w, int h, const std::wstring& text, const std::string& className)
+    : Div(x, y, w, h, className), m_text(text) {}
 
 void Label::draw()
 {
     if (!m_visible) return;
 
-    const int left = absX();
-    const int top = absY();
+    Div::draw();
+
+    const int left = absX() + m_style.margin.left;
+    const int top = absY() + m_style.margin.top;
     const int right = left + m_width;
     const int bottom = top + m_height;
-
-    setfillcolor(m_style.bgColor);
-    if (m_style.borderRadius > 0)
-        solidroundrect(left, top, right, bottom, m_style.borderRadius * 2, m_style.borderRadius * 2);
-    else
-        solidrectangle(left, top, right, bottom);
-
-    if (m_style.borderWidth > 0) {
-        setlinecolor(m_style.borderColor);
-        setlinestyle(PS_SOLID, m_style.borderWidth);
-        if (m_style.borderRadius > 0)
-            roundrect(left, top, right, bottom, m_style.borderRadius * 2, m_style.borderRadius * 2);
-        else
-            rectangle(left, top, right, bottom);
-    }
 
     RECT textRect{
         left + m_style.padding.left,
@@ -49,7 +42,7 @@ void Label::draw()
     setbkmode(TRANSPARENT);
     settextcolor(m_style.textColor);
     settextstyle(&font);
-    drawtext(m_text.c_str(), &textRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+    drawtext(m_text.c_str(), &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 void Label::setText(const std::wstring& text)

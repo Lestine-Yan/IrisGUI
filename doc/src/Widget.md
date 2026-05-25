@@ -20,6 +20,7 @@
 
 * `addChild(Widget*)`, `removeChild(Widget*)` – 添加/移除子控件
 * `addChild(Widget*)` 会根据父控件布局方向自动设置子控件位置，并扩大父控件和祖先控件以容纳子控件
+* `Layout` 通过 `App::layout()` 独立挂载，不属于普通 children，因此不参与父控件的盒模型自动布局
 * `getParent()` – 获取父控件
 * `setParent(Widget*)` – 设置父控件（自动更新全局绘制顺序）
 

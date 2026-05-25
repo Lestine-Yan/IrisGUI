@@ -33,6 +33,9 @@
     <ClInclude Include="include\Label.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Layout.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\Root.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -48,6 +51,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\Label.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Layout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\Root.cpp">
