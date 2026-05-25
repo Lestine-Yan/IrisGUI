@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "../include/Root.h"
+#include "../include/App.h"
 
 namespace IrisGUI {
 
@@ -19,8 +20,22 @@ void Root::draw()
 
 Root& Root::mount(Widget* child)
 {
-    if (!m_ended)
-        addChild(child);
+    if (!m_ended) {
+        if (auto* app = dynamic_cast<App*>(child)) {
+            bool hasMountedApp = false;
+            for (auto* existing : m_children) {
+                if (existing != child && dynamic_cast<App*>(existing)) {
+                    hasMountedApp = true;
+                    break;
+                }
+            }
+
+            app->setGeometry(0, 0, m_width, m_height);
+            app->setVisible(!hasMountedApp);
+        }
+
+        attachChild(child);
+    }
     return *this;
 }
 
@@ -36,6 +51,11 @@ void Root::end()
     if (!m_hasWindowSize) {
         m_width = windowWidth;
         m_height = windowHeight;
+    }
+
+    for (auto* child : m_children) {
+        if (auto* app = dynamic_cast<App*>(child))
+            app->setGeometry(0, 0, windowWidth, windowHeight);
     }
 
     initgraph(windowWidth, windowHeight);

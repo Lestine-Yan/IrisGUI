@@ -119,8 +119,8 @@ void Div::draw()
 {
     if (!m_visible) return;
 
-    const int left = absX();
-    const int top = absY();
+    const int left = absX() + m_style.margin.left;
+    const int top = absY() + m_style.margin.top;
     const int right = left + m_width;
     const int bottom = top + m_height;
 
@@ -163,64 +163,161 @@ void Div::applyClassName(const std::string& className)
     std::istringstream stream(className);
     std::string token;
     while (stream >> token) {
-        if (token == "flex") {
-            setFlex(true);
-            continue;
-        }
-
-        if (token.starts_with("font-")) {
-            int value = 0;
-            if (parseNonNegativeInt(token.substr(5), value))
-                parsedStyle.fontSize = value;
-            continue;
-        }
-
-        if (token.starts_with("w-")) {
-            int value = 0;
-            if (parseNonNegativeInt(token.substr(2), value))
-                parsedWidth = value;
-            continue;
-        }
-
-        if (token.starts_with("h-")) {
-            int value = 0;
-            if (parseNonNegativeInt(token.substr(2), value))
-                parsedHeight = value;
-            continue;
-        }
-
-        if (token.starts_with("ml-")) {
-            int value = 0;
-            if (parseNonNegativeInt(token.substr(3), value))
-                parsedStyle.margin.left = value;
-            continue;
-        }
-
-        if (token.starts_with("my-")) {
-            int value = 0;
-            if (parseNonNegativeInt(token.substr(3), value)) {
-                parsedStyle.margin.top = value;
-                parsedStyle.margin.bottom = value;
+        switch (token[0]) {
+        case 'f':
+            if (token == "flex") {
+                setFlex(true);
+                break;
             }
-            continue;
-        }
 
-        if (token.starts_with("p-")) {
-            int value = 0;
-            if (parseNonNegativeInt(token.substr(2), value)) {
-                parsedStyle.padding.left = value;
-                parsedStyle.padding.top = value;
-                parsedStyle.padding.right = value;
-                parsedStyle.padding.bottom = value;
+            if (token.starts_with("font-")) {
+                int value = 0;
+                if (parseNonNegativeInt(token.substr(5), value))
+                    parsedStyle.fontSize = value;
             }
-            continue;
-        }
+            break;
 
-        if (token.starts_with("bg-")) {
-            const std::string value = token.substr(3);
-            COLORREF color = parsedStyle.bgColor;
-            if (parseNamedColor(value, color) || parseRgbColor(value, color))
-                parsedStyle.bgColor = color;
+        case 'w':
+            if (token.starts_with("w-")) {
+                int value = 0;
+                if (parseNonNegativeInt(token.substr(2), value))
+                    parsedWidth = value;
+            }
+            break;
+
+        case 'h':
+            if (token.starts_with("h-")) {
+                int value = 0;
+                if (parseNonNegativeInt(token.substr(2), value))
+                    parsedHeight = value;
+            }
+            break;
+
+        case 'm':
+			if (token.starts_with("m-")) {
+				int value = 0;
+				if (parseNonNegativeInt(token.substr(2), value)) {
+					parsedStyle.margin.left = value;
+					parsedStyle.margin.top = value;
+					parsedStyle.margin.right = value;
+					parsedStyle.margin.bottom = value;
+				}
+				break;
+			}
+
+            if (token.size() <= 3 || token[2] != '-')
+                break;
+
+            {
+                int value = 0;
+                if (!parseNonNegativeInt(token.substr(3), value))
+                    break;
+
+                switch (token[1]) {
+                case 'l':
+                    parsedStyle.margin.left = value;
+                    break;
+                case 'r':
+                    parsedStyle.margin.right = value;
+                    break;
+                case 'b':
+                    parsedStyle.margin.bottom = value;
+                    break;
+                case 't':
+                    parsedStyle.margin.top = value;
+                    break;
+                case 'x':
+                    parsedStyle.margin.left = value;
+                    parsedStyle.margin.right = value;
+                    break;
+                case 'y':
+                    parsedStyle.margin.top = value;
+                    parsedStyle.margin.bottom = value;
+                    break;
+                default:
+                    break;
+                }
+            }
+            break;
+
+        case 'p':
+            if (token.starts_with("p-")) {
+                int value = 0;
+                if (parseNonNegativeInt(token.substr(2), value)) {
+                    parsedStyle.padding.left = value;
+                    parsedStyle.padding.top = value;
+                    parsedStyle.padding.right = value;
+                    parsedStyle.padding.bottom = value;
+                }
+                break;
+            }
+
+            if (token.size() <= 3 || token[2] != '-')
+                break;
+
+            {
+                int value = 0;
+                if (!parseNonNegativeInt(token.substr(3), value))
+                    break;
+
+                switch (token[1]) {
+                case 'l':
+                    parsedStyle.padding.left = value;
+                    break;
+                case 'r':
+                    parsedStyle.padding.right = value;
+                    break;
+                case 'b':
+                    parsedStyle.padding.bottom = value;
+                    break;
+                case 't':
+                    parsedStyle.padding.top = value;
+                    break;
+				case 'x':
+					parsedStyle.padding.left = value;
+					parsedStyle.padding.right = value;
+					break;
+				case 'y':
+					parsedStyle.padding.top = value;
+					parsedStyle.padding.bottom = value;
+					break;
+                default:
+                    break;
+                }
+            }
+            break;
+
+        case 'b':
+			if (token.starts_with("b-")) {
+				int value = 0;
+				if (parseNonNegativeInt(token.substr(2), value))
+					parsedStyle.borderWidth = value;
+			}
+			else if (token.starts_with("border-")) {
+				const std::string value = token.substr(7);
+				COLORREF color = parsedStyle.borderColor;
+				if (parseNamedColor(value, color) || parseRgbColor(value, color))
+					parsedStyle.borderColor = color;
+			}
+
+            if (token.starts_with("bg-")) {
+                const std::string value = token.substr(3);
+                COLORREF color = parsedStyle.bgColor;
+                if (parseNamedColor(value, color) || parseRgbColor(value, color))
+                    parsedStyle.bgColor = color;
+            }
+            break;
+
+        case 'r':
+			if (token.starts_with("round-")) {
+				int value = 0;
+				if (parseNonNegativeInt(token.substr(6), value))
+					parsedStyle.borderRadius = value;
+			}
+            break;
+
+        default:
+            break;
         }
     }
 

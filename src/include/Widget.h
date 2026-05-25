@@ -17,7 +17,7 @@ struct WidgetSpacing {
 struct WidgetStyle {
     COLORREF bgColor   = RGB(240, 240, 240);
     COLORREF borderColor = RGB(200, 200, 200);
-    int borderWidth    = 1;
+    int borderWidth    = 0;
     COLORREF textColor = RGB(0, 0, 0);
     int fontSize       = 16;
     int borderRadius   = 0;
@@ -89,6 +89,8 @@ public:
     void dispatchEvent(const ExMessage& msg);
 
 protected:
+    void attachChild(Widget* child);
+
     int  m_x = 0, m_y = 0;
     int  m_width = 100, m_height = 30;
     bool m_visible = true;
