@@ -89,6 +89,8 @@ public:
     void dispatchEvent(const ExMessage& msg);
 
 protected:
+    void attachChild(Widget* child);
+
     int  m_x = 0, m_y = 0;
     int  m_width = 100, m_height = 30;
     bool m_visible = true;
