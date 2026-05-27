@@ -34,6 +34,7 @@
 * `end()` 会从 Root 开始处理事件、更新状态并渲染控件树
 * 渲染循环使用 EasyX 批量绘制，在后台缓冲区完成清屏和绘制后再统一刷新，减少画面闪烁
 * 事件分发复用 `Widget::dispatchEvent(msg)`，从根节点向命中的子控件传递
+* 普通内容事件分发前，Root 会先将事件分发给可见 App 的 Layout 子控件，使 Layout 内的 `Link` 可以优先响应
 * 状态更新复用 `Widget::updateAll()`，从根节点向下遍历所有子控件
 * 绘制复用 `Widget::drawAll()`，先绘制 Root 背景，再递归绘制所有子控件
 * 普通控件绘制完成后，`Root::end()` 会最后绘制可见 App 上独立挂载的 `Layout`

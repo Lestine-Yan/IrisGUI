@@ -13,6 +13,7 @@
 
 * `draw()` – 绘制控件自身（由具体子类重写）
 * `handleEvent(ExMessage &msg)` – 处理鼠标/键盘事件（点击、移动、输入等）
+* `dispatchEventToChild(const ExMessage& msg)` – 仅将事件分发给命中的子控件，供 Layout 等独立层优先处理子控件事件
 * `onMouseDown`, `onMouseUp`, `onMouseMove` – 可选的事件回调虚函数
 * `update()` – 更新逻辑（如动画状态、输入框光标闪烁）
 

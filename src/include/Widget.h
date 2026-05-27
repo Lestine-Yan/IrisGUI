@@ -86,6 +86,7 @@ public:
     // ── Dispatch helpers ─────────────────────────────────────────
     void drawAll();
     void updateAll();
+    bool dispatchEventToChild(const ExMessage& msg);
     void dispatchEvent(const ExMessage& msg);
 
 protected:
