@@ -150,6 +150,7 @@
     <ClInclude Include="include\Div.h" />
     <ClInclude Include="include\Label.h" />
     <ClInclude Include="include\Layout.h" />
+    <ClInclude Include="include\Link.h" />
     <ClInclude Include="include\Root.h" />
     <ClInclude Include="include\Widget.h" />
     <ClInclude Include="src\pch.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="src\Div.cpp" />
     <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\Layout.cpp" />
+    <ClCompile Include="src\Link.cpp" />
     <ClCompile Include="src\Root.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

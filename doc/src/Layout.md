@@ -28,6 +28,7 @@
 * `Root::end()` 会先绘制 Root、App 和普通 children
 * 普通控件绘制完成后，Root 会额外绘制可见 App 的 `Layout`
 * 因此 `Layout` 总是在所属 App 的普通子控件之后渲染
+* Root 会在普通内容事件分发前先检查可见 App 的 Layout 子控件，因此 Layout 内的 `Link` 可以捕获点击
 
 ### Layout 布局层类在库中的意义
 

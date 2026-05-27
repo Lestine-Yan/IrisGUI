@@ -12,6 +12,8 @@ App::App(int w, int h)
 
 App::~App()
 {
+    if (m_layout)
+        m_layout->setApp(nullptr);
     delete m_layout;
 }
 
@@ -20,12 +22,15 @@ App& App::layout(Layout* layout)
     if (m_layout == layout)
         return *this;
 
+    if (m_layout)
+        m_layout->setApp(nullptr);
     delete m_layout;
     m_layout = layout;
 
     if (m_layout) {
         if (m_layout->parent())
             m_layout->setParent(nullptr);
+        m_layout->setApp(this);
         m_layout->setGeometry(0, 0, m_width, m_height);
     }
 

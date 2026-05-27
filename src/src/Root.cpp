@@ -97,7 +97,23 @@ void Root::end()
                 running = false;
                 break;
             }
-            dispatchEvent(msg);
+
+            bool dispatchedToLayout = false;
+            for (auto it = m_children.rbegin(); it != m_children.rend(); ++it) {
+                if (auto* app = dynamic_cast<App*>(*it)) {
+                    if (app->isVisible()) {
+                        if (auto* layout = app->layout()) {
+                            if (layout->dispatchEventToChild(msg)) {
+                                dispatchedToLayout = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!dispatchedToLayout)
+                dispatchEvent(msg);
         }
 
         updateAll();

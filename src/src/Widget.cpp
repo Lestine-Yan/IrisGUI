@@ -188,9 +188,9 @@ void Widget::updateAll()
         child->updateAll();
 }
 
-void Widget::dispatchEvent(const ExMessage& msg)
+bool Widget::dispatchEventToChild(const ExMessage& msg)
 {
-    if (!m_visible) return;
+    if (!m_visible) return false;
 
     bool isMouseEvent = (msg.message == WM_LBUTTONDOWN ||
                          msg.message == WM_LBUTTONUP   ||
@@ -206,10 +206,18 @@ void Widget::dispatchEvent(const ExMessage& msg)
              it != m_children.rend(); ++it) {
             if ((*it)->containsPoint(msg.x, msg.y)) {
                 (*it)->dispatchEvent(msg);
-                return;
+                return true;
             }
         }
     }
+
+    return false;
+}
+
+void Widget::dispatchEvent(const ExMessage& msg)
+{
+    if (!m_visible) return;
+    if (dispatchEventToChild(msg)) return;
 
     handleEvent(msg);
 }
