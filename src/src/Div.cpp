@@ -119,10 +119,10 @@ void Div::draw()
 {
     if (!m_visible) return;
 
-    const int left = absX() + m_style.margin.left;
-    const int top = absY() + m_style.margin.top;
-    const int right = left + m_width;
-    const int bottom = top + m_height;
+    const int left = m_x + m_style.margin.left;
+    const int top = m_y + m_style.margin.top;
+    const int right = ax() - m_style.margin.right;
+    const int bottom = ay() - m_style.margin.bottom;
 
     setfillcolor(m_style.bgColor);
     if (m_style.borderRadius > 0)

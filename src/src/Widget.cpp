@@ -58,7 +58,7 @@ int Widget::absX() const
     for (const Widget* p = m_parent; p; p = p->m_parent)
         ax += p->m_x;
     return ax;
-}
+}//弃用
 
 int Widget::absY() const
 {
@@ -66,7 +66,7 @@ int Widget::absY() const
     for (const Widget* p = m_parent; p; p = p->m_parent)
         ay += p->m_y;
     return ay;
-}
+}//弃用
 
 // ── Visibility ───────────────────────────────────────────────────────
 
@@ -93,18 +93,22 @@ void Widget::addChild(Widget* child)
         child->m_parent->removeChild(child);
 
     if (m_flex) {
-        int nextX = m_style.margin.left + m_style.padding.left + m_style.borderWidth;
-        for (auto* existing : m_children)
-            nextX = std::max(nextX, existing->ax());
-        child->m_x = nextX;
-        child->m_y = m_style.margin.top + m_style.padding.top + m_style.borderWidth;
+        if(m_children.empty()) {
+            child->m_x = m_style.margin.left + m_style.padding.left + m_style.borderWidth;
+        } else {
+            auto it = m_children.end() - 1;
+            child->m_x = std::max((*it)->ax(), (m_style.margin.left + m_style.padding.left + m_style.borderWidth));
+        }
+        child->m_y = m_y + m_style.margin.top + m_style.padding.top + m_style.borderWidth;
     }
     else {
-        int nextY = m_style.margin.top + m_style.padding.top + m_style.borderWidth;
-        for (auto* existing : m_children)
-            nextY = std::max(nextY, existing->ay());
-        child->m_x = m_style.margin.left + m_style.padding.left + m_style.borderWidth;
-        child->m_y = nextY;
+        if(m_children.empty()) {
+            child->m_y = m_style.margin.top + m_style.padding.top + m_style.borderWidth;
+        } else {
+            auto it = m_children.end() - 1;
+            child->m_y = std::max((*it)->ay(), (m_style.margin.top + m_style.padding.top + m_style.borderWidth));
+        }
+        child->m_x = m_x + m_style.margin.left + m_style.padding.left + m_style.borderWidth;
     }
 
     attachChild(child);
@@ -113,10 +117,10 @@ void Widget::addChild(Widget* child)
     for (Widget* parent = this; parent; parent = parent->m_parent) {
         parent->m_width = std::max(
             parent->m_width,
-            current->ax() + parent->m_style.padding.right + parent->m_style.borderWidth);
+            current->ax() - parent->m_x - parent->m_style.margin.left - parent->m_style.padding.left - parent->m_style.borderWidth);
         parent->m_height = std::max(
             parent->m_height,
-            current->ay() + parent->m_style.padding.bottom + parent->m_style.borderWidth);
+            current->ay() - parent->m_y - parent->m_style.margin.top - parent->m_style.padding.top - parent->m_style.borderWidth);
         current = parent;
     }
 }
@@ -129,7 +133,7 @@ void Widget::removeChild(Widget* child)
         m_children.erase(it);
         child->m_parent = nullptr;
     }
-}
+}//不建议使用，将在未来版本中删除，会导致容器内元素位置混乱
 
 void Widget::setParent(Widget* parent)
 {
@@ -137,15 +141,14 @@ void Widget::setParent(Widget* parent)
         parent->addChild(this);
     else if (m_parent)
         m_parent->removeChild(this);
-}
+}//建议在构造函数中直接指定父组件，或使用addChild方法添加到父组件中，不建议直接调用setParent方法，会导致容器内元素位置混乱
 
 // ── Hit testing ──────────────────────────────────────────────────────
 
 bool Widget::containsPoint(int px, int py) const
 {
-    int ax = absX(), ay = absY();
-    return px >= ax && px < ax + m_width &&
-           py >= ay && py < ay + m_height;
+    return px > m_x + m_style.margin.left && px < ax() - m_style.margin.right &&
+           py > m_y + m_style.margin.top && py < ay() - m_style.margin.bottom;
 }
 
 // ── Event handling ───────────────────────────────────────────────────
@@ -183,6 +186,7 @@ void Widget::drawAll()
 
 void Widget::updateAll()
 {
+    if (!m_visible) return;
     update();
     for (auto* child : m_children)
         child->updateAll();

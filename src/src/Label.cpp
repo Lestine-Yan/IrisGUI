@@ -21,16 +21,16 @@ void Label::draw()
 
     Div::draw();
 
-    const int left = absX() + m_style.margin.left;
-    const int top = absY() + m_style.margin.top;
-    const int right = left + m_width;
-    const int bottom = top + m_height;
+    const int left = m_x + m_style.margin.left;
+    const int top = m_y + m_style.margin.top;
+    const int right = ax() - m_style.margin.right;
+    const int bottom = ay() - m_style.margin.bottom;
 
     RECT textRect{
-        left + m_style.padding.left,
-        top + m_style.padding.top,
-        right - m_style.padding.right,
-        bottom - m_style.padding.bottom
+        left + m_style.padding.left + m_style.borderWidth,
+        top + m_style.padding.top + m_style.borderWidth,
+        right - m_style.padding.right - m_style.borderWidth,
+        bottom - m_style.padding.bottom - m_style.borderWidth
     };
 
     LOGFONT font{};
