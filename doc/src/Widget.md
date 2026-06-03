@@ -3,7 +3,7 @@
 
 #### 公有属性与生命周期
 
-* 位置（x, y）、大小（width, height）、是否可见（visible）
+* 绝对坐标系位置（x, y）、大小（width, height）、是否可见（visible）
 * 盒模型外边界（ax, ay），由位置、大小、padding、border 和 margin 计算得到
 * 父控件指针（parent）、子控件列表（children）
 * 控件样式（Style 结构体，包含颜色、边框、字体等）
@@ -28,7 +28,7 @@
 #### 工具方法
 
 * `setPos(int x, int y)`, `setSize(int w, int h)`
-* `ax()`, `ay()` – 获取控件盒模型在父坐标系中的右/下外边界
+* `ax()`, `ay()` – 获取控件盒模型在绝对坐标系中的右/下外边界
 * `containsPoint(int px, int py)` – 判断坐标是否在控件区域内
 * `setVisible(bool)` – 隐藏/显示控件
 * `setStyle(const Style&)` – 应用样式配置
