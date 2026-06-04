@@ -10,6 +10,7 @@ class Link : public Div {
 public:
     Link(std::size_t appIndex, int w = 100, int h = 30);
     Link(const std::string& className, std::size_t appIndex, int w = 100, int h = 30);
+	Link(const std::string& className, const std::wstring& text, std::size_t appIndex, int w = 100, int h = 30);
 
     void onMouseDown(const ExMessage& msg) override;
 

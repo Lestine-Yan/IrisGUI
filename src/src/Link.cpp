@@ -12,6 +12,10 @@ Link::Link(std::size_t appIndex, int w, int h)
 Link::Link(const std::string& className, std::size_t appIndex, int w, int h)
     : Div(className, w, h), m_appIndex(appIndex) {}
 
+Link::Link(const std::string& className, const std::wstring& text, std::size_t appIndex, int w, int h)
+	: Div(className, text, w, h), m_appIndex(appIndex) {
+}
+
 void Link::onMouseDown(const ExMessage& msg)
 {
     if (msg.message != WM_LBUTTONDOWN)

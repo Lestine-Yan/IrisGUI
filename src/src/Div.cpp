@@ -115,6 +115,12 @@ Div::Div(int x, int y, int w, int h, const std::string& className)
     applyClassName(className);
 }
 
+Div::Div(const std::string& className, const std::wstring& text, int w, int h)
+    : Widget(w, h), m_text(text)
+{
+    applyClassName(className);
+}
+
 void Div::draw()
 {
     if (!m_visible) return;
@@ -138,6 +144,26 @@ void Div::draw()
         else
             rectangle(left, top, right, bottom);
     }
+
+    //文字输出
+
+    RECT textRect{
+    left + m_style.padding.left + m_style.borderWidth,
+    top + m_style.padding.top + m_style.borderWidth,
+    right - m_style.padding.right - m_style.borderWidth,
+    bottom - m_style.padding.bottom - m_style.borderWidth
+    };
+
+    LOGFONT font{};
+    font.lfHeight = m_style.fontSize;
+    font.lfCharSet = DEFAULT_CHARSET;
+    font.lfQuality = PROOF_QUALITY;
+    wcscpy_s(font.lfFaceName, L"\x9ED1\x4F53");
+
+    setbkmode(TRANSPARENT);
+    settextcolor(m_style.textColor);
+    settextstyle(&font);
+    drawtext(m_text.c_str(), &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 void Div::setClassName(const std::string& className)
