@@ -5,5 +5,4 @@
 #include "App.h"
 #include "Layout.h"
 #include "Link.h"
-#include "Label.h"
 #include "Div.h"

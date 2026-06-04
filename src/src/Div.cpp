@@ -136,6 +136,11 @@ void Div::draw()
     else
         solidrectangle(left, top, right, bottom);
 
+    // 背景图片
+    if (m_bgImageLoaded) {
+        putimage(left, top, right - left, bottom - top, &m_bgImage, 0, 0);
+    }
+
     if (m_style.borderWidth > 0) {
         setlinecolor(m_style.borderColor);
         setlinestyle(PS_SOLID, m_style.borderWidth);
@@ -146,24 +151,25 @@ void Div::draw()
     }
 
     //文字输出
+    if (!m_text.empty()) {
+        RECT textRect{
+        left + m_style.padding.left + m_style.borderWidth,
+        top + m_style.padding.top + m_style.borderWidth,
+        right - m_style.padding.right - m_style.borderWidth,
+        bottom - m_style.padding.bottom - m_style.borderWidth
+        };
 
-    RECT textRect{
-    left + m_style.padding.left + m_style.borderWidth,
-    top + m_style.padding.top + m_style.borderWidth,
-    right - m_style.padding.right - m_style.borderWidth,
-    bottom - m_style.padding.bottom - m_style.borderWidth
-    };
+        LOGFONT font{};
+        font.lfHeight = m_style.fontSize;
+        font.lfCharSet = DEFAULT_CHARSET;
+        font.lfQuality = PROOF_QUALITY;
+        wcscpy_s(font.lfFaceName, L"\x9ED1\x4F53");
 
-    LOGFONT font{};
-    font.lfHeight = m_style.fontSize;
-    font.lfCharSet = DEFAULT_CHARSET;
-    font.lfQuality = PROOF_QUALITY;
-    wcscpy_s(font.lfFaceName, L"\x9ED1\x4F53");
-
-    setbkmode(TRANSPARENT);
-    settextcolor(m_style.textColor);
-    settextstyle(&font);
-    drawtext(m_text.c_str(), &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+        setbkmode(TRANSPARENT);
+        settextcolor(m_style.textColor);
+        settextstyle(&font);
+        drawtext(m_text.c_str(), &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    }
 }
 
 void Div::setClassName(const std::string& className)
@@ -329,8 +335,19 @@ void Div::applyClassName(const std::string& className)
             if (token.starts_with("bg-")) {
                 const std::string value = token.substr(3);
                 COLORREF color = parsedStyle.bgColor;
-                if (parseNamedColor(value, color) || parseRgbColor(value, color))
+                if (parseNamedColor(value, color) || parseRgbColor(value, color)) {
                     parsedStyle.bgColor = color;
+                }
+                else if (value.size() > 2 && value.front() == '[' && value.back() == ']') {
+                    // Image background: bg-[filename.png]
+                    const std::string imagePath = value.substr(1, value.size() - 2);
+                    const int len = MultiByteToWideChar(CP_UTF8, 0, imagePath.c_str(), -1, nullptr, 0);
+                    std::wstring wPath(len, L'\0');
+                    MultiByteToWideChar(CP_UTF8, 0, imagePath.c_str(), -1, &wPath[0], len);
+                    int result = loadimage(&m_bgImage, wPath.c_str());
+                    if(result == 0)
+                        m_bgImageLoaded = true;
+                }
             }
             break;
 

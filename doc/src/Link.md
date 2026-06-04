@@ -11,6 +11,7 @@
 
 * `Link(std::size_t appIndex, int w, int h)` – 创建跳转控件，并指定目标 App 索引和初始大小
 * `Link(const std::string& className, std::size_t appIndex, int w, int h)` – 创建跳转控件，并通过 className 初始化样式和尺寸，例如 `new Link("w-100 h-100", 1)`
+* `Link(const std::string& className, const std::wstring& text, std::size_t appIndex, int w, int h)`创建跳转控件，设置文本，通过 className 初始化样式和尺寸
 * `onMouseDown(const ExMessage& msg)` – 捕获左键点击并执行 App 切换
 
 #### 点击行为

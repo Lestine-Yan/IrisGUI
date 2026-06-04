@@ -22,7 +22,9 @@ public:
 
 private:
     std::string m_className;
-    std::wstring m_text;
+    std::wstring m_text = L"";
+    IMAGE m_bgImage;
+    bool m_bgImageLoaded = false;
 };
 
 } // namespace IrisGUI
