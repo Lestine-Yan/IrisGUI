@@ -148,7 +148,6 @@
     <ClInclude Include="include\iris.h" />
     <ClInclude Include="include\App.h" />
     <ClInclude Include="include\Div.h" />
-    <ClInclude Include="include\Label.h" />
     <ClInclude Include="include\Layout.h" />
     <ClInclude Include="include\Link.h" />
     <ClInclude Include="include\Root.h" />
@@ -158,7 +157,6 @@
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Div.cpp" />
-    <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\Layout.cpp" />
     <ClCompile Include="src\Link.cpp" />
     <ClCompile Include="src\Root.cpp" />

@@ -13,7 +13,8 @@
 * `Div(int w, int h)` – 创建容器，并初始化大小，位置由父控件布局自动管理
 * `Div(int x, int y, int w, int h)` – 兼容旧的手动定位写法，挂载到父控件后坐标会由布局覆盖
 * `Div(const std::string& className, int w, int h)` – 创建容器，并在初始化时解析样式字符串
-* `Div(int x, int y, int w, int h, const std::string& className)` – 创建容器，并同时指定初始位置、大小和样式字符串
+* `Div(const std::string& className,int w, int h)` – 创建容器，并在初始化时解析样式字符串
+* `Div(const std::string& className, const std::wstring& text, int w, int h)`  – 创建容器，并同时指定初始位置、大小、文本和样式字符串
 * `draw()` – 绘制容器背景和边框
 * `setClassName(const std::string& className)` – 设置并重新解析样式字符串
 * `className()` – 获取当前样式字符串
@@ -22,6 +23,7 @@
 #### 绘制行为
 
 * 根据 `WidgetStyle::bgColor` 绘制容器背景
+* 若通过 `bg-[filename.png]` 设置了背景图片且图片已加载，则在背景色之上拉伸绘制背景图
 * 根据 `WidgetStyle::borderColor` 和 `WidgetStyle::borderWidth` 绘制边框
 * 根据 `WidgetStyle::borderRadius` 绘制普通矩形或圆角矩形
 * `Div` 自身不绘制文本，只负责提供可见的容器区域
@@ -38,6 +40,7 @@
 * `p-N` – 同时设置四个方向的 `padding`
 * `bg-name` – 使用预定义颜色名设置背景色，当前支持 `black`、`white`、`red`、`green`、`blue`
 * `bg-[r,g,b]` – 使用 `RGB(r, g, b)` 形式设置背景色
+* `bg-[filename.png]` – 加载指定图片作为背景，图片会被拉伸至铺满整个容器区域（不含 margin），一个 Div 实例仅存储一张背景图，重复设置会覆盖前一张
 * 未知 token、非法数字和格式错误的颜色参数会被忽略，不中断整个解析过程
 
 ### Div 容器类在库中的意义
