@@ -172,6 +172,11 @@ void Div::draw()
     }
 }
 
+void Div::setText(const std::wstring& text)
+{
+	m_text = text;
+}
+
 void Div::setClassName(const std::string& className)
 {
     applyClassName(className);
