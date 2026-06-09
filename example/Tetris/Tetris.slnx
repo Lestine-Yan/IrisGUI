@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Tetris.vcxproj" Id="5d8e564a-843e-43d0-bac9-495fda08d726" />
+</Solution>

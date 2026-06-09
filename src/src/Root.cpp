@@ -108,6 +108,11 @@ void Root::end()
                                 break;
                             }
                         }
+                        // 也尝试分发给 App 的直接子组件（如直接挂在 App 上的 Link）
+                        if (!dispatchedToLayout && app->dispatchEventToChild(msg)) {
+                            dispatchedToLayout = true;
+                            break;
+                        }
                     }
                 }
             }
